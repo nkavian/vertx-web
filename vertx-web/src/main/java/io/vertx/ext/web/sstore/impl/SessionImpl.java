@@ -55,7 +55,7 @@ public class SessionImpl implements Session, ClusterSerializable, Shareable {
 
   private String id;
   private long timeout;
-  private Map<String, Object> data;
+  private Map<String, Object> data = new HashMap<>();
   private long lastAccessed;
   private boolean destroyed;
 
@@ -116,7 +116,6 @@ public class SessionImpl implements Session, ClusterSerializable, Shareable {
   @Override
   public void destroy() {
     destroyed = true;
-    data = null;
   }
 
   @Override
@@ -147,8 +146,8 @@ public class SessionImpl implements Session, ClusterSerializable, Shareable {
   }
 
   private Map<String, Object> getData() {
-    if (data == null) {
-      data = new HashMap<>();
+    if (destroyed) {
+      throw new IllegalStateException();
     }
     return data;
   }
@@ -217,7 +216,6 @@ public class SessionImpl implements Session, ClusterSerializable, Shareable {
     try {
       int entries = buffer.getInt(pos);
       pos +=4;
-      data = new HashMap<>(entries);
       for (int i = 0; i < entries; i++) {
         int keylen = buffer.getInt(pos);
         pos += 4;
