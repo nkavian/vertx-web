@@ -20,6 +20,7 @@ import io.vertx.codegen.annotations.Fluent;
 import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.Handler;
 import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.Session;
 import io.vertx.ext.web.handler.impl.SessionHandlerImpl;
 import io.vertx.ext.web.sstore.SessionStore;
 
@@ -122,5 +123,19 @@ public interface SessionHandler extends Handler<RoutingContext> {
    */
   @Fluent
   SessionHandler setSessionCookieName(String sessionCookieName);
+
+  /**
+   * Create a new session for the current context. You will not normally call this method.
+   *
+   * @param context the context
+   */
+  void createSession(RoutingContext context);
+
+  /**
+   * Destroy the contexts session. You will not normally call this method.
+   *
+   * @param context the context
+   */
+  void destroySession(RoutingContext context);
 
 }

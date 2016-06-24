@@ -31,7 +31,7 @@ import io.vertx.ext.web.sstore.impl.SessionImpl;
 import io.vertx.test.core.TestUtils;
 import io.vertx.test.fakecluster.FakeClusterManager;
 import org.junit.Test;
-
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -136,12 +136,12 @@ public class ClusteredSessionHandlerTest extends SessionHandlerTestBase {
   @Test
   public void testSessionSerializationNullPrincipal() {
     long timeout = 123;
-    SessionImpl session = (SessionImpl)store.createSession(timeout);
+    SessionImpl session = (SessionImpl)store.createSession(null, UUID.randomUUID().toString(), timeout);
     stuffSession(session);
     checkSession(session);
     Buffer buffer = Buffer.buffer();
     session.writeToBuffer(buffer);
-    SessionImpl session2 = (SessionImpl)store.createSession(0);
+    SessionImpl session2 = (SessionImpl)store.createSession(null, UUID.randomUUID().toString(), 0);
     session2.readFromBuffer(0, buffer);
     checkSession(session2);
     assertEquals(timeout, session2.timeout());

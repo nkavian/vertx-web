@@ -96,7 +96,6 @@ public interface Cookie {
   Cookie setPath(@Nullable String path);
 
   /**
-   *
    * @return the path for this cookie
    */
   @Nullable
@@ -114,6 +113,11 @@ public interface Cookie {
    */
   @Fluent
   Cookie setMaxAge(long maxAge);
+
+  /**
+   * @return the max age for this cookie
+   */
+  long getMaxAge();
 
   /**
    * Sets the security getStatus of this cookie

@@ -42,6 +42,7 @@ public abstract class SessionHandlerTestBase extends WebTestBase {
     String sessionCookieName = "acme.sillycookie";
     router.route().handler(SessionHandler.create(store).setSessionCookieName(sessionCookieName));
     router.route().handler(rc -> {
+      rc.session();
       rc.response().end();
     });
     testRequest(HttpMethod.GET, "/", null, resp -> {
@@ -55,6 +56,7 @@ public abstract class SessionHandlerTestBase extends WebTestBase {
     router.route().handler(CookieHandler.create());
     router.route().handler(SessionHandler.create(store).setCookieHttpOnlyFlag(true));
     router.route().handler(rc -> {
+      rc.session();
       rc.response().end();
     });
 
@@ -70,6 +72,7 @@ public abstract class SessionHandlerTestBase extends WebTestBase {
     router.route().handler(CookieHandler.create());
     router.route().handler(SessionHandler.create(store).setCookieSecureFlag(true));
     router.route().handler(rc -> {
+      rc.session();
       rc.response().end();
     });
 
@@ -85,6 +88,7 @@ public abstract class SessionHandlerTestBase extends WebTestBase {
     router.route().handler(CookieHandler.create());
     router.route().handler(SessionHandler.create(store).setCookieSecureFlag(true).setCookieHttpOnlyFlag(true));
     router.route().handler(rc -> {
+      rc.session();
       rc.response().end();
     });
 

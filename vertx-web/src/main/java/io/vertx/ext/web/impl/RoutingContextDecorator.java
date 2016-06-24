@@ -11,7 +11,7 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.User;
 import io.vertx.ext.web.*;
-
+import io.vertx.ext.web.handler.SessionHandler;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -229,6 +229,21 @@ public class RoutingContextDecorator implements RoutingContext {
   }
 
   @Override
+  public @Nullable Session session(boolean create) {
+    return decoratedContext.session(create);
+  }
+
+  @Override
+  public @Nullable SessionHandler sessionHandler() {
+    return decoratedContext.sessionHandler();
+  }
+
+  @Override
+  public void setSessionHandler(SessionHandler sessionHandler) {
+      decoratedContext.setSessionHandler(sessionHandler);
+  }
+
+  @Override
   public void setUser(User user) {
     decoratedContext.setUser(user);
   }
@@ -247,5 +262,5 @@ public class RoutingContextDecorator implements RoutingContext {
   public Vertx vertx() {
     return decoratedContext.vertx();
   }
-  
+
 }

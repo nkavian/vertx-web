@@ -31,7 +31,7 @@ import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.User;
-
+import io.vertx.ext.web.handler.SessionHandler;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -239,11 +239,27 @@ public interface RoutingContext {
 
   /**
    * Get the session. The context must have first been routed to a {@link io.vertx.ext.web.handler.SessionHandler}
-   * for this to be populated.
+   * for this to be populated.  Creates a session if one doesn't currently exist.
    * Sessions live for a browser session, and are maintained by session cookies.
    * @return  the session.
    */
   @Nullable Session session();
+
+  /**
+   * Get the session. The context must have first been routed to a {@link io.vertx.ext.web.handler.SessionHandler}
+   * for this to be populated.
+   * Sessions live for a browser session, and are maintained by session cookies.
+   * @param create true if it should create a new session when one doesn't exist or false if it should return null instead.
+   * @return  the session.
+   */
+  @Nullable Session session(boolean create);
+
+  /**
+   * Get the session handler. The context must have first been routed to a {@link io.vertx.ext.web.handler.SessionHandler}
+   * for this to be populated.
+   * @return  the session handler.
+   */
+  @Nullable SessionHandler sessionHandler();
 
   /**
    * Get the authenticated user (if any). This will usually be injected by an auth handler if authentication if successful.
@@ -334,6 +350,13 @@ public interface RoutingContext {
    * @param session  the session
    */
   void setSession(Session session);
+
+  /**
+   * Set the session handler. Used by the {@link io.vertx.ext.web.handler.SessionHandler}. You will not normally call this method.
+   *
+   * @param sessionHandler the sessionHandler
+   */
+  void setSessionHandler(SessionHandler sessionHandler);
 
   /**
    * Set the user. Usually used by auth handlers to inject a User. You will not normally call this method.

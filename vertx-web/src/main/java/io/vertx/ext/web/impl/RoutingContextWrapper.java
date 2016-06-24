@@ -27,7 +27,7 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.User;
 import io.vertx.ext.web.*;
-
+import io.vertx.ext.web.handler.SessionHandler;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -121,6 +121,21 @@ public class RoutingContextWrapper extends RoutingContextImplBase {
   @Override
   public Session session() {
     return inner.session();
+  }
+
+  @Override
+  public @Nullable Session session(boolean create) {
+    return inner.session(create);
+  }
+
+  @Override
+  public @Nullable SessionHandler sessionHandler() {
+    return inner.sessionHandler();
+  }
+
+  @Override
+  public void setSessionHandler(SessionHandler sessionHandler) {
+    inner.setSessionHandler(sessionHandler);
   }
 
   @Override

@@ -215,8 +215,8 @@ public class BasicAuthHandlerTest extends AuthHandlerTestBase {
     }
 
     @Override
-    public Session createSession(long timeout) {
-      return new SessionImpl(timeout);
+    public Session createSession(RoutingContext context, String id, long timeout) {
+      return new SessionImpl(context, id, timeout);
     }
 
     @Override

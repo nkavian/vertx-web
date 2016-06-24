@@ -18,10 +18,9 @@ package io.vertx.ext.web.sstore.impl;
 
 import io.vertx.core.VertxException;
 import io.vertx.core.buffer.Buffer;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 import io.vertx.core.shareddata.Shareable;
 import io.vertx.core.shareddata.impl.ClusterSerializable;
+import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.Session;
 import io.vertx.ext.web.impl.Utils;
 
@@ -29,14 +28,12 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author <a href="http://tfox.org">Tim Fox</a>
  */
 public class SessionImpl implements Session, ClusterSerializable, Shareable {
 
-  private static final Logger log = LoggerFactory.getLogger(SessionImpl.class);
   private static final Charset UTF8 = Charset.forName("UTF-8");
 
   private static final byte TYPE_LONG = 1;
@@ -58,12 +55,14 @@ public class SessionImpl implements Session, ClusterSerializable, Shareable {
   private Map<String, Object> data = new HashMap<>();
   private long lastAccessed;
   private boolean destroyed;
+  private RoutingContext context;
 
   public SessionImpl() {
   }
 
-  public SessionImpl(long timeout) {
-    this.id = UUID.randomUUID().toString();
+  public SessionImpl(RoutingContext context, String id, long timeout) {
+    this.context = context;
+    this.id = id;
     this.timeout = timeout;
     this.lastAccessed = System.currentTimeMillis();
   }
@@ -115,6 +114,7 @@ public class SessionImpl implements Session, ClusterSerializable, Shareable {
 
   @Override
   public void destroy() {
+    context.sessionHandler().destroySession(context);
     destroyed = true;
   }
 
@@ -294,7 +294,7 @@ public class SessionImpl implements Session, ClusterSerializable, Shareable {
             byte[] classNameBytes = buffer.getBytes(pos, pos + classNameLen);
             pos += classNameLen;
             String className = new String(classNameBytes, UTF8);
-            Class clazz = Utils.getClassLoader().loadClass(className);
+            Class<?> clazz = Utils.getClassLoader().loadClass(className);
             ClusterSerializable obj = (ClusterSerializable)clazz.newInstance();
             pos = obj.readFromBuffer(pos, buffer);
             val = obj;

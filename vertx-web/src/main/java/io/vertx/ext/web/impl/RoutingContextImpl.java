@@ -29,7 +29,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.User;
 import io.vertx.ext.web.*;
 import io.vertx.ext.web.Locale;
-
+import io.vertx.ext.web.handler.SessionHandler;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -54,6 +54,7 @@ public class RoutingContextImpl extends RoutingContextImplBase {
   private Buffer body;
   private Set<FileUpload> fileUploads;
   private Session session;
+  private SessionHandler sessionHandler;
   private User user;
 
   public RoutingContextImpl(String mountPoint, RouterImpl router, HttpServerRequest request, Set<RouteImpl> routes) {
@@ -225,8 +226,26 @@ public class RoutingContextImpl extends RoutingContextImplBase {
   }
 
   @Override
+  public SessionHandler sessionHandler() {
+    return sessionHandler;
+  }
+
+  @Override
+  public void setSessionHandler(SessionHandler sessionHandler) {
+    this.sessionHandler = sessionHandler;
+  }
+
+  @Override
   public Session session() {
-    return session;
+    return session(true);
+  }
+
+  @Override
+  public Session session(boolean create) {
+    if (sessionHandler != null && create && (session == null || session.isDestroyed())) {
+        sessionHandler.createSession(this);
+    }
+    return session == null || session.isDestroyed() ? null : session;
   }
 
   @Override

@@ -21,6 +21,7 @@ import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.shareddata.LocalMap;
+import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.Session;
 import io.vertx.ext.web.sstore.LocalSessionStore;
 
@@ -46,8 +47,8 @@ public class LocalSessionStoreImpl implements LocalSessionStore, Handler<Long> {
   }
 
   @Override
-  public Session createSession(long timeout) {
-    return new SessionImpl(timeout);
+  public Session createSession(RoutingContext context, String id, long timeout) {
+    return new SessionImpl(context, id, timeout);
   }
 
   @Override

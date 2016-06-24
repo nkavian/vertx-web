@@ -20,6 +20,7 @@ import io.vertx.codegen.annotations.Nullable;
 import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
+import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.Session;
 
 /**
@@ -42,11 +43,13 @@ public interface SessionStore {
   /**
    * Create a new session
    *
+   * @param context - the routing context
+   * @param id - the session id
    * @param timeout - the session timeout, in ms
    *
    * @return the session
    */
-  Session createSession(long timeout);
+  Session createSession(RoutingContext context, String id, long timeout);
 
   /**
    * Get the session with the specified ID

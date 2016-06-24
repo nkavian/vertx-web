@@ -90,6 +90,11 @@ public class CookieImpl implements Cookie {
   }
 
   @Override
+  public long getMaxAge() {
+    return nettyCookie.maxAge();
+  }
+
+  @Override
   public Cookie setSecure(final boolean secure) {
     nettyCookie.setSecure(secure);
     this.changed = true;
